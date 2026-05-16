@@ -5,31 +5,14 @@ type SearchBarProps = {
 
 export function SearchBar({ search, onSearch }: SearchBarProps) {
   return (
-    <div style={{
-      flex: 1,
-      minWidth: "200px",
-      display: "flex",
-      alignItems: "center",
-      gap: "0.5rem",
-      background: "white",
-      border: "1px solid #e5e7eb",
-      borderRadius: "10px",
-      padding: "0.6rem 1rem",
-    }}>
-      <span style={{ color: "#9ca3af" }}>🔍</span>
+    <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-2">
+      <span className="text-gray-400">🔍</span>
       <input
         type="text"
         placeholder="Search products..."
         value={search}
         onChange={(e) => onSearch(e.target.value)}
-        style={{
-          background: "transparent",
-          border: "none",
-          outline: "none",
-          color: "#111827",
-          fontSize: "0.9rem",
-          width: "100%",
-        }}
+        className="bg-transparent border-none outline-none text-gray-900 text-sm w-full"
       />
     </div>
   );

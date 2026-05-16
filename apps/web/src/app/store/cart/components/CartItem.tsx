@@ -10,99 +10,46 @@ type CartItemProps = {
 
 export function CartItem({ product, quantity, onIncrease, onDecrease, onRemove }: CartItemProps) {
   return (
-    <div style={{
-      background: "white",
-      border: "1px solid #e5e7eb",
-      borderRadius: "16px",
-      padding: "1.25rem",
-      display: "flex",
-      gap: "1rem",
-      alignItems: "center",
-    }}>
-      <div style={{
-        width: "80px",
-        height: "80px",
-        borderRadius: "10px",
-        overflow: "hidden",
-        flexShrink: 0,
-      }}>
-        <img
-          src={product.image}
-          alt={product.name}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
+    <div className="bg-white border border-gray-200 rounded-2xl p-5 flex gap-4 items-center">
+      {/* Image */}
+      <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+        <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
       </div>
 
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <h3 style={{
-          fontWeight: "700",
-          fontSize: "0.95rem",
-          color: "#111827",
-          marginBottom: "0.25rem",
-        }}>
-          {product.name}
-        </h3>
-        <p style={{ color: "#6b7280", fontSize: "0.8rem" }}>
-          ${product.price.toFixed(2)} each
-        </p>
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <h3 className="font-bold text-sm text-gray-900 mb-1">{product.name}</h3>
+        <p className="text-gray-500 text-xs">${product.price.toFixed(2)} each</p>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+      {/* Quantity controls */}
+      <div className="flex items-center gap-2">
         <button
           onClick={() => onDecrease(product.id)}
-          style={{
-            width: "28px",
-            height: "28px",
-            borderRadius: "50%",
-            border: "1px solid #e5e7eb",
-            background: "white",
-            cursor: "pointer",
-            fontSize: "1rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          className="w-7 h-7 rounded-full border border-gray-200 bg-white cursor-pointer flex items-center justify-center text-base"
         >
           −
         </button>
-        <span style={{ fontWeight: "700", minWidth: "20px", textAlign: "center" }}>
-          {quantity}
-        </span>
+        <span className="font-bold min-w-[20px] text-center">{quantity}</span>
         <button
           onClick={() => onIncrease(product.id)}
-          style={{
-            width: "28px",
-            height: "28px",
-            borderRadius: "50%",
-            border: "1px solid #e5e7eb",
-            background: "white",
-            cursor: "pointer",
-            fontSize: "1rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          className="w-7 h-7 rounded-full border border-gray-200 bg-white cursor-pointer flex items-center justify-center text-base"
         >
           +
         </button>
       </div>
 
-      <div style={{ textAlign: "right", minWidth: "80px" }}>
-        <p style={{ fontWeight: "800", fontSize: "1rem", color: "#111827" }}>
+      {/* Item total */}
+      <div className="text-right min-w-[80px]">
+        <p className="font-extrabold text-base text-gray-900">
           ${(product.price * quantity).toFixed(2)}
         </p>
       </div>
 
+      {/* Remove */}
       <button
         onClick={() => onRemove(product.id)}
-        style={{
-          background: "none",
-          border: "none",
-          color: "#9ca3af",
-          cursor: "pointer",
-          fontSize: "1.2rem",
-          padding: "0.25rem",
-        }}
+        className="bg-transparent border-none text-gray-400 cursor-pointer text-lg p-1"
       >
         ✕
       </button>

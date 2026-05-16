@@ -6,117 +6,66 @@ type ProductCardProps = {
 };
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+  const stockColor =
+    product.stock === 0
+      ? "text-red-600"
+      : product.stock <= 4
+      ? "text-orange-500"
+      : "text-green-600";
+
+  const stockText =
+    product.stock === 0
+      ? "Out of stock"
+      : product.stock <= 4
+      ? `Only ${product.stock} left!`
+      : `${product.stock} in stock`;
+
   return (
-    <div
-      style={{
-        background: "white",
-        border: "1px solid #e5e7eb",
-        borderRadius: "16px",
-        overflow: "hidden",
-        transition: "all 0.2s",
-        cursor: "pointer",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)";
-        (e.currentTarget as HTMLElement).style.borderColor = "#a31631";
-        (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.boxShadow = "none";
-        (e.currentTarget as HTMLElement).style.borderColor = "#e5e7eb";
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-      }}
-    >
-      <div style={{ width: "100%", height: "180px", overflow: "hidden" }}>
+    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden transition-all hover:shadow-md hover:border-wsu-red hover:-translate-y-0.5 cursor-pointer">
+      {/* Image */}
+      <div className="w-full h-44 overflow-hidden">
         <img
           src={product.image}
           alt={product.name}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          className="w-full h-full object-cover"
         />
       </div>
 
-      <div style={{ padding: "1.25rem" }}>
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "0.5rem",
-        }}>
-          <span style={{
-            background: "#fef2f2",
-            color: "#a31631",
-            border: "1px solid #fecaca",
-            fontSize: "0.7rem",
-            fontWeight: "600",
-            padding: "0.2rem 0.5rem",
-            borderRadius: "20px",
-          }}>
+      {/* Content */}
+      <div className="p-5">
+        {/* Category + Stock */}
+        <div className="flex justify-between items-center mb-2">
+          <span className="bg-red-50 text-wsu-red border border-red-200 text-xs font-semibold px-2 py-0.5 rounded-full">
             {product.category}
           </span>
-          <span style={{
-            color: product.stock === 0 
-              ? "#dc2626"       
-              : product.stock <= 4 
-                ? "#f97316"      
-                : "#16a34a",     
-            fontSize: "0.7rem",
-            fontWeight: "600",
-          }}>
-            {product.stock === 0 
-              ? "Out of stock" 
-              : product.stock <= 4 
-                ? `Only ${product.stock} left!` 
-                : `${product.stock} in stock`}
+          <span className={`text-xs font-semibold ${stockColor}`}>
+            {stockText}
           </span>
         </div>
 
-        <h3 style={{
-          fontSize: "0.95rem",
-          fontWeight: "700",
-          color: "#111827",
-          marginBottom: "0.4rem",
-          letterSpacing: "-0.01em",
-        }}>
+        {/* Name */}
+        <h3 className="text-sm font-bold text-gray-900 mb-1 tracking-tight">
           {product.name}
         </h3>
 
-        <p style={{
-          fontSize: "0.8rem",
-          color: "#6b7280",
-          lineHeight: 1.5,
-          marginBottom: "1rem",
-        }}>
+        {/* Description */}
+        <p className="text-xs text-gray-500 leading-relaxed mb-4">
           {product.description}
         </p>
 
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}>
-          <span style={{
-            fontSize: "1.2rem",
-            fontWeight: "800",
-            color: "#111827",
-            letterSpacing: "-0.02em",
-          }}>
+        {/* Price + Button */}
+        <div className="flex justify-between items-center">
+          <span className="text-xl font-extrabold text-gray-900 tracking-tight">
             ${product.price.toFixed(2)}
           </span>
-
           <button
             onClick={() => onAddToCart(product.id)}
             disabled={product.stock === 0}
-            style={{
-              background: product.stock === 0 ? "#f3f4f6" : "#a31631",
-              color: product.stock === 0 ? "#9ca3af" : "#fff",
-              border: "none",
-              padding: "0.5rem 1rem",
-              borderRadius: "8px",
-              fontSize: "0.8rem",
-              fontWeight: "600",
-              cursor: product.stock === 0 ? "not-allowed" : "pointer",
-              transition: "all 0.2s",
-            }}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+              product.stock === 0
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-wsu-red text-white cursor-pointer hover:opacity-90"
+            }`}
           >
             {product.stock === 0 ? "Out of Stock" : "+ Add to Cart"}
           </button>

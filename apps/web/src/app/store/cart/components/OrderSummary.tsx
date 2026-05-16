@@ -8,77 +8,34 @@ type OrderSummaryProps = {
 
 export function OrderSummary({ total, cartCount, onCheckout }: OrderSummaryProps) {
   return (
-    <div style={{
-      background: "white",
-      border: "1px solid #e5e7eb",
-      borderRadius: "16px",
-      padding: "1.5rem",
-      marginTop: "0.5rem",
-    }}>
-      <h3 style={{
-        fontWeight: "700",
-        fontSize: "1rem",
-        color: "#111827",
-        marginBottom: "1rem",
-        paddingBottom: "0.75rem",
-        borderBottom: "1px solid #f3f4f6",
-      }}>
+    <div className="bg-white border border-gray-200 rounded-2xl p-6 mt-2">
+      <h3 className="font-bold text-base text-gray-900 mb-4 pb-3 border-b border-gray-100">
         Order Summary
       </h3>
 
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-        <span style={{ color: "#6b7280", fontSize: "0.9rem" }}>
-          Subtotal ({cartCount} item{cartCount !== 1 ? "s" : ""})
-        </span>
-        <span style={{ fontWeight: "600", fontSize: "0.9rem" }}>
-          ${total.toFixed(2)}
-        </span>
+      <div className="flex justify-between mb-2">
+        <span className="text-gray-500 text-sm">Subtotal ({cartCount} item{cartCount !== 1 ? "s" : ""})</span>
+        <span className="font-semibold text-sm">${total.toFixed(2)}</span>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1.5rem" }}>
-        <span style={{ color: "#6b7280", fontSize: "0.9rem" }}>Shipping</span>
-        <span style={{ fontWeight: "600", fontSize: "0.9rem", color: "#16a34a" }}>Free</span>
+      <div className="flex justify-between mb-6">
+        <span className="text-gray-500 text-sm">Shipping</span>
+        <span className="font-semibold text-sm text-green-600">Free</span>
       </div>
 
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        paddingTop: "0.75rem",
-        borderTop: "1px solid #f3f4f6",
-        marginBottom: "1.5rem",
-      }}>
-        <span style={{ fontWeight: "800", fontSize: "1.1rem", color: "#111827" }}>Total</span>
-        <span style={{ fontWeight: "800", fontSize: "1.1rem", color: "#111827" }}>
-          ${total.toFixed(2)}
-        </span>
+      <div className="flex justify-between pt-3 border-t border-gray-100 mb-6">
+        <span className="font-extrabold text-lg text-gray-900">Total</span>
+        <span className="font-extrabold text-lg text-gray-900">${total.toFixed(2)}</span>
       </div>
 
       <button
         onClick={onCheckout}
-        style={{
-          width: "100%",
-          background: "#a31631",
-          color: "white",
-          border: "none",
-          padding: "0.875rem",
-          borderRadius: "10px",
-          fontWeight: "700",
-          fontSize: "1rem",
-          cursor: "pointer",
-          transition: "background 0.2s",
-        }}
+        className="w-full bg-wsu-red text-white border-none py-3.5 rounded-xl font-bold text-base cursor-pointer transition-opacity hover:opacity-90"
       >
         Complete Purchase
       </button>
 
-      <Link href="/store" style={{
-        display: "block",
-        textAlign: "center",
-        marginTop: "0.75rem",
-        color: "#6b7280",
-        textDecoration: "none",
-        fontSize: "0.85rem",
-      }}>
+      <Link href="/store" className="block text-center mt-3 text-gray-500 no-underline text-sm">
         ← Continue Shopping
       </Link>
     </div>

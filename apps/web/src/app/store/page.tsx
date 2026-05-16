@@ -1,13 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { StoreNav } from "./components/StoreNav";
 import { SearchBar } from "./components/SearchBar";
 import { CategoryFilter } from "./components/CategoryFilter";
 import { ProductCard } from "./components/ProductCard";
 import { PRODUCTS } from "./data";
-
 
 export default function StorePage() {
   const [search, setSearch] = useState("");
@@ -39,78 +37,43 @@ export default function StorePage() {
   const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0ede8", fontFamily: "'Georgia', serif" }}>
-
+    <div className="min-h-screen bg-wsu-cream font-serif">
       <StoreNav cartCount={cartCount} />
 
-      <div style={{ padding: "4rem 2rem 2rem", maxWidth: "1200px", margin: "0 auto" }}>
-        <p style={{
-          color: "#a31631",
-          fontSize: "0.75rem",
-          fontWeight: "700",
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-          marginBottom: "0.75rem",
-        }}>
+      {/* Hero */}
+      <div className="max-w-7xl mx-auto px-8 pt-16 pb-8">
+        <p className="text-wsu-red text-xs font-bold tracking-widest uppercase mb-3">
           Premium Tech Accessories
         </p>
-        <h1 style={{
-          fontSize: "clamp(2rem, 5vw, 3.5rem)",
-          fontWeight: "800",
-          letterSpacing: "-0.03em",
-          lineHeight: 1.1,
-          marginBottom: "1rem",
-          color: "#111827",
-        }}>
+        <h1 className="text-5xl font-extrabold tracking-tight leading-tight mb-4 text-gray-900">
           Upgrade Your Setup
         </h1>
-        <p style={{ color: "#6b7280", fontSize: "1rem", maxWidth: "500px" }}>
+        <p className="text-gray-500 text-base max-w-lg">
           Handpicked accessories for developers, designers, and creators.
         </p>
       </div>
 
-      <div style={{
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "0 2rem 2rem",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "1rem",
-        alignItems: "center",
-      }}>
+      {/* Search + Filter */}
+      <div className="max-w-7xl mx-auto px-8 pb-8 flex flex-wrap gap-4 items-center">
         <SearchBar search={search} onSearch={setSearch} />
         <CategoryFilter selected={selectedCategory} onSelect={setSelectedCategory} />
       </div>
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem 1rem" }}>
-        <p style={{ color: "#9ca3af", fontSize: "0.8rem", fontWeight: "500" }}>
+      {/* Product count */}
+      <div className="max-w-7xl mx-auto px-8 pb-4">
+        <p className="text-gray-400 text-xs font-medium">
           {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}
         </p>
       </div>
 
-      <div style={{
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "0 2rem 4rem",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-        gap: "1.5rem",
-      }}>
+      {/* Product grid */}
+      <div className="max-w-7xl mx-auto px-8 pb-16 grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-6">
         {filteredProducts.length === 0 && (
-          <div style={{
-            gridColumn: "1 / -1",
-            textAlign: "center",
-            padding: "4rem",
-            color: "#9ca3af",
-            background: "white",
-            borderRadius: "16px",
-            border: "1px solid #e5e7eb",
-          }}>
-            <p style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>◌</p>
-            <p style={{ fontSize: "0.9rem" }}>No products found.</p>
+          <div className="col-span-full text-center p-16 text-gray-400 bg-white rounded-2xl border border-gray-200">
+            <p className="text-3xl mb-2">◌</p>
+            <p className="text-sm">No products found.</p>
           </div>
         )}
-
         {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}

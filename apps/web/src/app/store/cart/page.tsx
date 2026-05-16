@@ -69,92 +69,48 @@ export default function CartPage() {
   const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0ede8", fontFamily: "'Georgia', serif" }}>
+    <div className="min-h-screen bg-wsu-cream font-serif">
       <StoreNav cartCount={cartCount} />
 
-      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "3rem 2rem" }}>
+      <div className="max-w-3xl mx-auto px-8 py-12">
 
-        <div style={{ marginBottom: "2rem" }}>
-          <p style={{
-            color: "#a31631",
-            fontSize: "0.75rem",
-            fontWeight: "700",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            marginBottom: "0.5rem",
-          }}>
+        {/* Header */}
+        <div className="mb-8">
+          <p className="text-wsu-red text-xs font-bold tracking-widest uppercase mb-2">
             Your Cart
           </p>
-          <h1 style={{
-            fontSize: "2.5rem",
-            fontWeight: "800",
-            color: "#111827",
-            letterSpacing: "-0.03em",
-          }}>
+          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
             {checkedOut ? "Order Placed!" : `${cartCount} item${cartCount !== 1 ? "s" : ""}`}
           </h1>
         </div>
 
+        {/* Checkout success */}
         {checkedOut && (
-          <div style={{
-            background: "white",
-            border: "1px solid #e5e7eb",
-            borderRadius: "16px",
-            padding: "3rem",
-            textAlign: "center",
-          }}>
-            <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>✅</p>
-            <h2 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#111827", marginBottom: "0.5rem" }}>
-              Thank you for your order!
-            </h2>
-            <p style={{ color: "#6b7280", marginBottom: "2rem" }}>
-              Your order has been placed successfully.
-            </p>
-            <Link href="/store" style={{
-              background: "#a31631",
-              color: "white",
-              padding: "0.75rem 2rem",
-              borderRadius: "8px",
-              textDecoration: "none",
-              fontWeight: "600",
-              fontSize: "0.9rem",
-            }}>
+          <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
+            <p className="text-5xl mb-4">✅</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Thank you for your order!</h2>
+            <p className="text-gray-500 mb-8">Your order has been placed successfully.</p>
+            <Link href="/store" className="bg-wsu-red text-white px-8 py-3 rounded-lg no-underline font-semibold text-sm">
               Continue Shopping
             </Link>
           </div>
         )}
 
+        {/* Empty cart */}
         {!checkedOut && cartItems.length === 0 && (
-          <div style={{
-            background: "white",
-            border: "1px solid #e5e7eb",
-            borderRadius: "16px",
-            padding: "3rem",
-            textAlign: "center",
-          }}>
-            <p style={{ fontSize: "3rem", marginBottom: "1rem" }}>🛒</p>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: "700", color: "#111827", marginBottom: "0.5rem" }}>
-              Your cart is empty
-            </h2>
-            <p style={{ color: "#6b7280", marginBottom: "2rem" }}>
-              Add some products to get started.
-            </p>
-            <Link href="/store" style={{
-              background: "#a31631",
-              color: "white",
-              padding: "0.75rem 2rem",
-              borderRadius: "8px",
-              textDecoration: "none",
-              fontWeight: "600",
-              fontSize: "0.9rem",
-            }}>
+          <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
+            <p className="text-5xl mb-4">🛒</p>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
+            <p className="text-gray-500 mb-8">Add some products to get started.</p>
+            <Link href="/store" className="bg-wsu-red text-white px-8 py-3 rounded-lg no-underline font-semibold text-sm">
               Browse Products
             </Link>
           </div>
         )}
 
+        {/* Cart items + summary */}
         {!checkedOut && cartItems.length > 0 && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div className="flex flex-col gap-4">
             {cartItems.map(({ product, quantity }) => (
               <CartItem
                 key={product.id}

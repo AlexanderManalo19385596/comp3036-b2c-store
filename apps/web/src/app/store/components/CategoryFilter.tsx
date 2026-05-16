@@ -7,23 +7,16 @@ type CategoryFilterProps = {
 
 export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
   return (
-    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+    <div className="flex gap-2 flex-wrap">
       {CATEGORIES.map((cat) => (
         <button
           key={cat}
           onClick={() => onSelect(cat)}
-          style={{
-            padding: "0.4rem 1rem",
-            borderRadius: "20px",
-            border: "1px solid",
-            fontSize: "0.8rem",
-            fontWeight: "600",
-            cursor: "pointer",
-            transition: "all 0.2s",
-            background: selected === cat ? "#a31631" : "white",
-            borderColor: selected === cat ? "#a31631" : "#e5e7eb",
-            color: selected === cat ? "#fff" : "#6b7280",
-          }}
+          className={`px-4 py-1.5 rounded-full border text-xs font-semibold cursor-pointer transition-all ${
+            selected === cat
+              ? "bg-wsu-red border-wsu-red text-white"
+              : "bg-white border-gray-200 text-gray-500"
+          }`}
         >
           {cat}
         </button>
