@@ -27,7 +27,6 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
       }}
     >
-      {/* Image */}
       <div style={{ width: "100%", height: "180px", overflow: "hidden" }}>
         <img
           src={product.image}
@@ -36,7 +35,6 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         />
       </div>
 
-      {/* Info */}
       <div style={{ padding: "1.25rem" }}>
         <div style={{
           display: "flex",
@@ -56,11 +54,19 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             {product.category}
           </span>
           <span style={{
-            color: product.stock > 0 ? "#16a34a" : "#dc2626",
+            color: product.stock === 0 
+              ? "#dc2626"       
+              : product.stock <= 4 
+                ? "#f97316"      
+                : "#16a34a",     
             fontSize: "0.7rem",
             fontWeight: "600",
           }}>
-            {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+            {product.stock === 0 
+              ? "Out of stock" 
+              : product.stock <= 4 
+                ? `Only ${product.stock} left!` 
+                : `${product.stock} in stock`}
           </span>
         </div>
 
