@@ -76,6 +76,24 @@ export default defineConfig({
       dependencies: process.env.CI ? ["setup"] : [],
     },
 
+    {
+      name: "chromium",
+      testDir: "./tests/store",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "http://localhost:3001",
+      },
+      dependencies: process.env.CI ? ["setup"] : [],
+    },
+    {
+      name: "chromium",
+      testDir: "./tests/admin-store",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "http://localhost:3002",
+      },
+      dependencies: process.env.CI ? ["setup"] : [],
+    },
     // {
     //   name: "firefox",
     //   use: { ...devices["Desktop Firefox"] },

@@ -15,7 +15,6 @@ type CartItemType = {
 
 export default function CartPage() {
   const [cart, setCart] = useState<Record<number, number>>({});
-  const [checkedOut, setCheckedOut] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("cart");
@@ -48,12 +47,6 @@ export default function CartPage() {
     updateCart(newCart);
   };
 
-  const handleCheckout = () => {
-    localStorage.removeItem("cart");
-    setCart({});
-    setCheckedOut(true);
-  };
-
   const cartItems: CartItemType[] = Object.entries(cart)
     .map(([id, quantity]) => {
       const product = PRODUCTS.find((p) => p.id === Number(id));
@@ -80,24 +73,12 @@ export default function CartPage() {
             Your Cart
           </p>
           <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-            {checkedOut ? "Order Placed!" : `${cartCount} item${cartCount !== 1 ? "s" : ""}`}
+            {cartCount === 0 ? "Your Cart" : `${cartCount} item${cartCount !== 1 ? "s" : ""}`}
           </h1>
         </div>
 
-        {/* Checkout success */}
-        {checkedOut && (
-          <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
-            <p className="text-5xl mb-4">✅</p>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Thank you for your order!</h2>
-            <p className="text-gray-500 mb-8">Your order has been placed successfully.</p>
-            <Link href="/store" className="bg-wsu-red text-white px-8 py-3 rounded-lg no-underline font-semibold text-sm">
-              Continue Shopping
-            </Link>
-          </div>
-        )}
-
         {/* Empty cart */}
-        {!checkedOut && cartItems.length === 0 && (
+        {cartItems.length === 0 && (
           <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
             <p className="text-5xl mb-4">🛒</p>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
@@ -109,7 +90,7 @@ export default function CartPage() {
         )}
 
         {/* Cart items + summary */}
-        {!checkedOut && cartItems.length > 0 && (
+        {cartItems.length > 0 && (
           <div className="flex flex-col gap-4">
             {cartItems.map(({ product, quantity }) => (
               <CartItem
@@ -124,7 +105,6 @@ export default function CartPage() {
             <OrderSummary
               total={total}
               cartCount={cartCount}
-              onCheckout={handleCheckout}
             />
           </div>
         )}
