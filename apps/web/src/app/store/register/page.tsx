@@ -1,18 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { StoreNav } from "../components/StoreNav";
 
-const MOCK_ADMIN = {
-  email: "admin@techstore.com",
-  password: "admin123",
-  name: "Admin",
-};
-
-export default function AdminLoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,8 +18,18 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setError("");
 
-    if (!email || !password) {
+    if (!name || !email || !password || !confirmPassword) {
       setError("Please fill in all fields.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
       return;
     }
 
@@ -29,29 +37,28 @@ export default function AdminLoginPage() {
 
     setTimeout(() => {
       setLoading(false);
-      if (email.trim() === MOCK_ADMIN.email && password === MOCK_ADMIN.password) {
-        localStorage.setItem("admin", JSON.stringify({ email: MOCK_ADMIN.email, name: MOCK_ADMIN.name }));
-        router.push("/store");
-      } else {
-        setError("Invalid email or password.");
-      }
+      localStorage.setItem("user", JSON.stringify({ email, name }));
+      router.push("/store");
     }, 800);
   };
 
   return (
-    <div className="min-h-screen bg-wsu-cream font-serif flex items-center justify-center px-6">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-wsu-cream font-serif">
+      <StoreNav cartCount={0} />
+
+      <div className="max-w-md mx-auto px-6 mt-16">
 
         {/* Header */}
         <div className="text-center mb-8">
           <p className="text-wsu-red text-xs font-bold tracking-widest uppercase mb-2">
-            Admin Access
+            Create Account
           </p>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-            Tech<span className="text-wsu-red">Store</span> Admin
-          </h1>
+          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Register</h1>
           <p className="text-gray-500 text-sm mt-2">
-            Sign in to manage your store
+            Already have an account?{" "}
+            <Link href="/store/login" className="text-wsu-red font-semibold no-underline">
+              Sign In
+            </Link>
           </p>
         </div>
 
@@ -66,6 +73,20 @@ export default function AdminLoginPage() {
               </div>
             )}
 
+            {/* Name */}
+            <div className="mb-5">
+              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Alex M"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 outline-none bg-gray-50"
+              />
+            </div>
+
             {/* Email */}
             <div className="mb-5">
               <label className="block text-xs font-semibold text-gray-700 mb-1.5">
@@ -75,13 +96,13 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@techstore.com"
+                placeholder="you@example.com"
                 className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 outline-none bg-gray-50"
               />
             </div>
 
             {/* Password */}
-            <div className="mb-6">
+            <div className="mb-5">
               <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                 Password
               </label>
@@ -89,6 +110,20 @@ export default function AdminLoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 outline-none bg-gray-50"
+              />
+            </div>
+
+            {/* Confirm Password */}
+            <div className="mb-6">
+              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 outline-none bg-gray-50"
               />
@@ -102,11 +137,18 @@ export default function AdminLoginPage() {
                 loading ? "bg-gray-400 cursor-not-allowed" : "bg-wsu-red cursor-pointer hover:opacity-90"
               }`}
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? "Creating account..." : "Create Account"}
             </button>
 
           </form>
         </div>
+
+        {/* Back to store */}
+        <p className="text-center mt-6">
+          <Link href="/store" className="text-gray-500 no-underline text-sm">
+            ← Back to Store
+          </Link>
+        </p>
       </div>
     </div>
   );

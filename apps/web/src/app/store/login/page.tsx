@@ -52,6 +52,12 @@ export default function LoginPage() {
             Welcome Back
           </p>
           <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Sign In</h1>
+          <p className="text-gray-500 text-sm mt-2">
+            Don't have an account?{" "}
+            <Link href="/store/register" className="text-wsu-red font-semibold no-underline">
+              Register
+            </Link>
+          </p>
         </div>
 
         {/* Form card */}

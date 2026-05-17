@@ -49,6 +49,13 @@ export function StoreNav({ cartCount }: StoreNavProps) {
           🛒 Cart {cartCount > 0 && `(${cartCount})`}
         </Link>
 
+        {/* Purchase History */}
+        {user && (
+          <Link href="/store/history" className="text-gray-500 no-underline text-sm font-semibold">
+            Orders
+          </Link>
+        )}
+
         {/* Auth */}
         {user ? (
           <div className="flex items-center gap-3">
