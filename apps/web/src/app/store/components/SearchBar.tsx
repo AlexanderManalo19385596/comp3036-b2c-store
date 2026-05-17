@@ -10,6 +10,7 @@ export function SearchBar({ search, onSearch }: SearchBarProps) {
       <input
         type="text"
         placeholder="Search products..."
+        aria-label="Search products"
         value={search}
         onChange={(e) => onSearch(e.target.value)}
         className="bg-transparent border-none outline-none text-gray-900 text-sm w-full"

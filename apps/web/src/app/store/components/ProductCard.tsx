@@ -61,6 +61,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           <button
             onClick={() => onAddToCart(product.id)}
             disabled={product.stock === 0}
+            aria-label={product.stock === 0 ? `${product.name} is out of stock` : `Add ${product.name} to cart`}
             className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
               product.stock === 0
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"

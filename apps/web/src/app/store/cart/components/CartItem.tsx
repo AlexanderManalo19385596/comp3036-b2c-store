@@ -26,6 +26,7 @@ export function CartItem({ product, quantity, onIncrease, onDecrease, onRemove }
       <div className="flex items-center gap-2">
         <button
           onClick={() => onDecrease(product.id)}
+          aria-label={`Decrease quantity of ${product.name}`}
           className="w-7 h-7 rounded-full border border-gray-200 bg-white cursor-pointer flex items-center justify-center text-base"
         >
           −
@@ -33,6 +34,7 @@ export function CartItem({ product, quantity, onIncrease, onDecrease, onRemove }
         <span className="font-bold min-w-[20px] text-center">{quantity}</span>
         <button
           onClick={() => onIncrease(product.id)}
+          aria-label={`Increase quantity of ${product.name}`}
           className="w-7 h-7 rounded-full border border-gray-200 bg-white cursor-pointer flex items-center justify-center text-base"
         >
           +
@@ -49,6 +51,7 @@ export function CartItem({ product, quantity, onIncrease, onDecrease, onRemove }
       {/* Remove */}
       <button
         onClick={() => onRemove(product.id)}
+        aria-label={`Remove ${product.name} from cart`}
         className="bg-transparent border-none text-gray-400 cursor-pointer text-lg p-1"
       >
         ✕

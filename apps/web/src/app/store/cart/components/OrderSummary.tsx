@@ -29,6 +29,7 @@ export function OrderSummary({ total, cartCount }: OrderSummaryProps) {
 
       <Link
         href="/store/checkout"
+        aria-label="Proceed to checkout"
         className="block w-full bg-wsu-red text-white text-center py-3.5 rounded-xl font-bold text-base no-underline transition-opacity hover:opacity-90"
       >
         Proceed to Checkout

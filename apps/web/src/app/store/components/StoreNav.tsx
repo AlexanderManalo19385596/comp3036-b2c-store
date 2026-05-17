@@ -40,6 +40,7 @@ export function StoreNav({ cartCount }: StoreNavProps) {
         {/* Cart */}
         <Link
           href="/store/cart"
+          aria-label={`Cart with ${cartCount} item${cartCount !== 1 ? "s" : ""}`}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold no-underline transition-all ${
             cartCount > 0
               ? "bg-wsu-red text-white"
@@ -62,6 +63,7 @@ export function StoreNav({ cartCount }: StoreNavProps) {
             <span className="text-sm text-gray-500">Hi, {user.name}</span>
             <button
               onClick={handleSignOut}
+              aria-label="Sign out of your account"
               className="border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 cursor-pointer font-semibold bg-white"
             >
               Sign Out

@@ -7,7 +7,7 @@ type CategoryFilterProps = {
 
 export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
   return (
-    <div className="flex gap-2 flex-wrap">
+    <div role="group" aria-label="Filter by category" className="flex gap-2 flex-wrap">
       {CATEGORIES.map((cat) => (
         <button
           key={cat}
