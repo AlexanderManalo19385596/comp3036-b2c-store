@@ -3,10 +3,9 @@ import Link from "next/link";
 type OrderSummaryProps = {
   total: number;
   cartCount: number;
-  onCheckout: () => void;
 };
 
-export function OrderSummary({ total, cartCount, onCheckout }: OrderSummaryProps) {
+export function OrderSummary({ total, cartCount }: OrderSummaryProps) {
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-6 mt-2">
       <h3 className="font-bold text-base text-gray-900 mb-4 pb-3 border-b border-gray-100">
@@ -28,12 +27,12 @@ export function OrderSummary({ total, cartCount, onCheckout }: OrderSummaryProps
         <span className="font-extrabold text-lg text-gray-900">${total.toFixed(2)}</span>
       </div>
 
-      <button
-        onClick={onCheckout}
-        className="w-full bg-wsu-red text-white border-none py-3.5 rounded-xl font-bold text-base cursor-pointer transition-opacity hover:opacity-90"
+      <Link
+        href="/store/checkout"
+        className="block w-full bg-wsu-red text-white text-center py-3.5 rounded-xl font-bold text-base no-underline transition-opacity hover:opacity-90"
       >
-        Complete Purchase
-      </button>
+        Proceed to Checkout
+      </Link>
 
       <Link href="/store" className="block text-center mt-3 text-gray-500 no-underline text-sm">
         ← Continue Shopping
