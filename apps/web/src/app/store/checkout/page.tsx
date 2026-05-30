@@ -5,41 +5,83 @@ import Link from "next/link";
 import { StoreNav } from "../components/StoreNav";
 import { OrderDetails } from "./components/OrderDetails";
 import { PaymentForm } from "./components/PaymentForm";
-import { PRODUCTS } from "../data";
+import type { Product } from "../types";
 
 type CartItem = {
   name: string;
   quantity: number;
   price: number;
+  productId: number;
 };
 
 export default function CheckoutPage() {
   const [cart, setCart] = useState<Record<number, number>>({});
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [paid, setPaid] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Always load cart first regardless of login state
     const stored = localStorage.getItem("cart");
     if (stored) setCart(JSON.parse(stored));
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setIsLoggedIn(false);
+      return;
+    }
+    setIsLoggedIn(true);
+
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then(setProducts)
+      .catch(console.error);
   }, []);
 
   const cartItems: CartItem[] = Object.entries(cart)
     .map(([id, quantity]) => {
-      const product = PRODUCTS.find((p) => p.id === Number(id));
-      return product ? { name: product.name, quantity, price: product.price } : null;
+      const product = products.find((p) => p.id === Number(id));
+      return product
+        ? { name: product.name, quantity, price: product.price, productId: product.id }
+        : null;
     })
     .filter((item): item is CartItem => item !== null);
 
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
   const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
 
-  const handlePay = () => {
+  const handlePay = async () => {
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const token = localStorage.getItem("token");
+      await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          items: cartItems.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        }),
+      });
+
+      setTimeout(() => {
+        setLoading(false);
+        setPaid(true);
+        localStorage.removeItem("cart");
+      }, 2000);
+    } catch {
       setLoading(false);
-      setPaid(true);
-      localStorage.removeItem("cart");
-    }, 2000);
+    }
   };
 
   return (
@@ -58,10 +100,35 @@ export default function CheckoutPage() {
           </h1>
         </div>
 
-        {/* Success state */}
-        {paid && (
+        {/* Not logged in */}
+        {!isLoggedIn && (
           <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
-            <p className="text-5xl mb-4">✅</p>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
+              Account required to purchase
+            </h2>
+            <p className="text-gray-500 mb-8">
+              You need to be logged in to complete your purchase. Your cart will be saved.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Link
+                href="/store/login?redirect=/store/checkout"
+                className="bg-wsu-red text-white px-8 py-3 rounded-lg no-underline font-semibold text-sm"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/store/register?redirect=/store/checkout"
+                className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg no-underline font-semibold text-sm"
+              >
+                Create Account
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Success state */}
+        {isLoggedIn && paid && (
+          <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
             <p className="text-gray-500 mb-2">Thank you for your order.</p>
             <p className="text-gray-400 text-sm mb-8">
@@ -85,7 +152,7 @@ export default function CheckoutPage() {
         )}
 
         {/* Empty cart */}
-        {!paid && cartItems.length === 0 && (
+        {isLoggedIn && !paid && cartItems.length === 0 && (
           <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
             <p className="text-5xl mb-4">🛒</p>
             <h2 className="text-xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
@@ -97,7 +164,7 @@ export default function CheckoutPage() {
         )}
 
         {/* Checkout layout */}
-        {!paid && cartItems.length > 0 && (
+        {isLoggedIn && !paid && cartItems.length > 0 && (
           <div className="grid grid-cols-2 gap-6">
             <PaymentForm onPay={handlePay} loading={loading} />
             <OrderDetails items={cartItems} total={total} />

@@ -18,49 +18,7 @@ type Order = {
   total: number;
 };
 
-const MOCK_ORDERS: Order[] = [
-  {
-    id: "ORD-001",
-    date: "12 May 2025",
-    status: "Delivered",
-    items: [
-      { name: "MacBook Pro Stand", quantity: 1, price: 49.99 },
-      { name: "Mechanical Keyboard", quantity: 1, price: 129.99 },
-    ],
-    total: 179.98,
-  },
-  {
-    id: "ORD-002",
-    date: "28 Apr 2025",
-    status: "Delivered",
-    items: [
-      { name: "Wireless Mouse", quantity: 2, price: 44.99 },
-      { name: "XL Desk Mat", quantity: 1, price: 34.99 },
-    ],
-    total: 124.97,
-  },
-  {
-    id: "ORD-003",
-    date: "2 May 2025",
-    status: "Shipped",
-    items: [
-      { name: "USB-C Hub 7-in-1", quantity: 1, price: 59.99 },
-    ],
-    total: 59.99,
-  },
-  {
-    id: "ORD-004",
-    date: "14 May 2025",
-    status: "Processing",
-    items: [
-      { name: "Monitor Light Bar", quantity: 1, price: 39.99 },
-      { name: "Cable Management Kit", quantity: 2, price: 24.99 },
-    ],
-    total: 89.97,
-  },
-];
-
-const statusColor: Record<Order["status"], string> = {
+const statusColor: Record<string, string> = {
   Delivered: "bg-green-50 text-green-700 border-green-200",
   Shipped: "bg-blue-50 text-blue-700 border-blue-200",
   Processing: "bg-orange-50 text-orange-700 border-orange-200",
@@ -68,7 +26,9 @@ const statusColor: Record<Order["status"], string> = {
 
 export default function HistoryPage() {
   const [user, setUser] = useState<{ name: string } | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [cartCount, setCartCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -78,6 +38,19 @@ export default function HistoryPage() {
     if (storedCart) {
       const cart = JSON.parse(storedCart);
       setCartCount(Object.values(cart).reduce((a: number, b) => a + (b as number), 0));
+    }
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch("/api/orders", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((r) => r.json())
+        .then(setOrders)
+        .catch(console.error)
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -114,10 +87,29 @@ export default function HistoryPage() {
           </div>
         )}
 
+        {/* Loading */}
+        {user && loading && (
+          <div className="text-center py-12 text-gray-400">
+            Loading orders...
+          </div>
+        )}
+
+        {/* No orders */}
+        {user && !loading && orders.length === 0 && (
+          <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
+            <p className="text-5xl mb-4">📦</p>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">No orders yet</h2>
+            <p className="text-gray-500 mb-8">You haven't placed any orders yet.</p>
+            <Link href="/store" className="bg-wsu-red text-white px-8 py-3 rounded-lg no-underline font-semibold text-sm">
+              Start Shopping
+            </Link>
+          </div>
+        )}
+
         {/* Orders list */}
-        {user && (
+        {user && !loading && orders.length > 0 && (
           <div className="flex flex-col gap-4">
-            {MOCK_ORDERS.map((order) => (
+            {orders.map((order) => (
               <div key={order.id} className="bg-white border border-gray-200 rounded-2xl p-6">
 
                 {/* Order header */}

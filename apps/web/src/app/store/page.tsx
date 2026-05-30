@@ -5,19 +5,25 @@ import { StoreNav } from "./components/StoreNav";
 import { SearchBar } from "./components/SearchBar";
 import { CategoryFilter } from "./components/CategoryFilter";
 import { ProductCard } from "./components/ProductCard";
-import { PRODUCTS } from "./data";
+import type { Product } from "./types";
 
 export default function StorePage() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [cart, setCart] = useState<{ [id: number]: number }>({});
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("cart");
     if (stored) setCart(JSON.parse(stored));
+
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then(setProducts)
+      .catch(console.error);
   }, []);
 
-  const filteredProducts = PRODUCTS.filter((p) => {
+  const filteredProducts = products.filter((p) => {
     const matchesSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.description.toLowerCase().includes(search.toLowerCase());

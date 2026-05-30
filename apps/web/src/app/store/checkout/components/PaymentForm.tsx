@@ -33,13 +33,6 @@ export function PaymentForm({ onPay, loading }: PaymentFormProps) {
         Payment Details
       </h3>
 
-      {/* Demo hint */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-5">
-        <p className="text-xs font-semibold text-blue-700 mb-1">Demo card details:</p>
-        <p className="text-xs text-blue-600">Card: 4242 4242 4242 4242</p>
-        <p className="text-xs text-blue-600">Expiry: 12/26 — CVV: 123</p>
-      </div>
-
       <form onSubmit={handleSubmit}>
 
         {/* Name on card */}

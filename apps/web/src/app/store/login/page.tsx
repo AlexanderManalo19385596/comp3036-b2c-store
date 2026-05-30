@@ -1,24 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { StoreNav } from "../components/StoreNav";
-
-const MOCK_USER = {
-  email: "user@techstore.com",
-  password: "password123",
-  name: "Alex",
-};
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const stored = localStorage.getItem("cart");
+    if (stored) {
+      const cart = JSON.parse(stored);
+      setCartCount(Object.values(cart).reduce((a: number, b) => a + (b as number), 0));
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -29,20 +33,35 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      if (email.trim() === MOCK_USER.email && password === MOCK_USER.password) {
-        localStorage.setItem("user", JSON.stringify({ email: MOCK_USER.email, name: MOCK_USER.name }));
-        router.push("/store");
-      } else {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
         setError("Invalid email or password.");
+        return;
       }
-    }, 800);
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      const redirectTo = searchParams.get("redirect") || "/store";
+      router.push(redirectTo);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-wsu-cream font-serif">
-      <StoreNav cartCount={0} />
+      <StoreNav cartCount={cartCount} />
 
       <div className="max-w-md mx-auto px-6 mt-16">
 

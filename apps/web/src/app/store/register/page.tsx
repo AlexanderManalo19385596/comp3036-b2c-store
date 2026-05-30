@@ -1,20 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { StoreNav } from "../components/StoreNav";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const stored = localStorage.getItem("cart");
+    if (stored) {
+      const cart = JSON.parse(stored);
+      setCartCount(Object.values(cart).reduce((a: number, b) => a + (b as number), 0));
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -28,23 +38,52 @@ export default function RegisterPage() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+
+    if (!/[0-9]/.test(password)) {
+      setError("Password must contain at least one number.");
+      return;
+    }
+
+    if (!/[!@#$%^&*]/.test(password)) {
+      setError("Password must contain at least one symbol (!@#$%^&*).");
       return;
     }
 
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Registration failed.");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      const redirectTo = searchParams.get("redirect") || "/store";
+      router.push(redirectTo);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
-      localStorage.setItem("user", JSON.stringify({ email, name }));
-      router.push("/store");
-    }, 800);
+    }
   };
 
   return (
     <div className="min-h-screen bg-wsu-cream font-serif">
-      <StoreNav cartCount={0} />
+      <StoreNav cartCount={cartCount} />
 
       <div className="max-w-md mx-auto px-6 mt-16">
 

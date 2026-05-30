@@ -24,6 +24,7 @@ export function StoreNav({ cartCount }: StoreNavProps) {
 
   const handleSignOut = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setUser(null);
     router.push("/store");
   };

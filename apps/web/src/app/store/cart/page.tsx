@@ -5,7 +5,6 @@ import Link from "next/link";
 import { StoreNav } from "../components/StoreNav";
 import { CartItem } from "./components/CartItem";
 import { OrderSummary } from "./components/OrderSummary";
-import { PRODUCTS } from "../data";
 import type { Product } from "../types";
 
 type CartItemType = {
@@ -15,10 +14,16 @@ type CartItemType = {
 
 export default function CartPage() {
   const [cart, setCart] = useState<Record<number, number>>({});
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("cart");
     if (stored) setCart(JSON.parse(stored));
+
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then(setProducts)
+      .catch(console.error);
   }, []);
 
   const updateCart = (newCart: Record<number, number>) => {
@@ -49,7 +54,7 @@ export default function CartPage() {
 
   const cartItems: CartItemType[] = Object.entries(cart)
     .map(([id, quantity]) => {
-      const product = PRODUCTS.find((p) => p.id === Number(id));
+      const product = products.find((p) => p.id === Number(id));
       return product ? { product, quantity } : null;
     })
     .filter((item): item is CartItemType => item !== null);
