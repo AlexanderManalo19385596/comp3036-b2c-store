@@ -41,7 +41,8 @@ test.describe("STORE HOME SCREEN", () => {
     "Add to cart updates count @s1",
     async ({ page }) => {
       await page.goto("/store");
-      await page.getByRole("button", { name: "+ Add to Cart" }).first().click();
+      await page.waitForLoadState("networkidle");
+      await page.getByText("+ Add to Cart").first().click();
       await expect(page.getByText("Cart (1)")).toBeVisible();
     },
   );
